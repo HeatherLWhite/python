@@ -269,6 +269,13 @@ peakListNamesCL = [
 
 count1 = 0
 
+# Open file
+fileName = "/mnt/c/Users/heath/Ubuntu/PeakPMFAllCL_PMFvsSR_RawData.txt"
+outFile = open(fileName, "w")
+outFile.write("Strain Rate (A/fs)" + '\t' + "Peak PMF L=20" + '\t' + "Peak PMF L=30" + '\t' 
+    + "Peak PMF L=40" + '\t' + "Peak PMF L=50" + '\t' + "Peak PMF L=60" + '\t' + "Peak PMF L=70" 
+    + '\t' + "Peak PMF L=80" + '\t' + "Peak PMF L=90" + '\t' + "Peak PMF L=100" + "\n")
+
 # Extract and sort all needed data
 
 for pathSet in pmfPathsList:
@@ -293,10 +300,30 @@ for pathSet in pmfPathsList:
         peakListNamesCL[count1].append(avgPeakPMFValue)
 
         count2 += 1
-    
-    plt.scatter(strainRateList, peakListNamesCL[count1])
 
+    plt.scatter(strainRateList, peakListNamesCL[count1])
+    
+
+ 
     count1 += 1
+
+for count in range (0,6):
+    strainRateList[count] = str(strainRateList[count])
+    pmfPeakListL20[count] = str(pmfPeakListL20[count])
+    pmfPeakListL30[count] = str(pmfPeakListL30[count])
+    pmfPeakListL40[count] = str(pmfPeakListL40[count])
+    pmfPeakListL50[count] = str(pmfPeakListL50[count])
+    pmfPeakListL60[count] = str(pmfPeakListL60[count])
+    pmfPeakListL70[count] = str(pmfPeakListL70[count])
+    pmfPeakListL80[count] = str(pmfPeakListL80[count])
+    pmfPeakListL90[count] = str(pmfPeakListL90[count])
+    pmfPeakListL100[count] = str(pmfPeakListL100[count])
+
+    outFile.write(strainRateList[count] + '\t' + pmfPeakListL20[count] + '\t' + pmfPeakListL30[count] + '\t' + pmfPeakListL40[count]
+        + '\t' + pmfPeakListL50[count] + '\t' + pmfPeakListL60[count] + '\t' + pmfPeakListL70[count] + '\t' + pmfPeakListL80[count]
+        + '\t' + pmfPeakListL90[count] + '\t' + pmfPeakListL100[count] + '\n')
+
+outFile.close()
 
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 plt.title("Peak PMF vs Strain Rate")

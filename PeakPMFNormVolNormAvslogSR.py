@@ -126,6 +126,18 @@ volumeList = [
     float(7.37E-25)
     ]
 
+paramAList = [
+    1.94290782e+28,
+    3.55543153e+28,
+    4.24569737e+28,
+    5.46194143e+28,
+    5.56408111e+28,
+    7.73819166e+28,
+    7.35449061e+28,
+    8.08363391e+28,
+    8.90252852e+28
+    ]
+
 ############################## STOP EDITING #############################
 #########################################################################
 
@@ -229,6 +241,7 @@ def findPMFPeakIndex(pmfList):
             pmfPeakValue = None
     return pmfPeakIndex, pmfPeakValue
 
+"""
 pmfPeakListSR0_000005 = []
 pmfPeakListSR0_00001 = []
 pmfPeakListSR0_00005 = []
@@ -244,6 +257,7 @@ peakListNamesSR = [
     pmfPeakListSR0_0005,
     pmfPeakListSR0_001
     ]   
+"""
 
 pmfPeakListL20 = []   
 pmfPeakListL30 = []
@@ -269,6 +283,15 @@ peakListNamesCL = [
 
 count1 = 0
 
+"""
+# Open file
+fileName = "/mnt/c/Users/heath/Ubuntu/PeakPMFNormVolAllCL_PMFvsSR_RawData.txt"
+outFile = open(fileName, "w")
+outFile.write("Strain Rate (A/fs)" + '\t' + "Peak PMF L=20" + '\t' + "Peak PMF L=30" + '\t' 
+    + "Peak PMF L=40" + '\t' + "Peak PMF L=50" + '\t' + "Peak PMF L=60" + '\t' + "Peak PMF L=70" 
+    + '\t' + "Peak PMF L=80" + '\t' + "Peak PMF L=90" + '\t' + "Peak PMF L=100" + "\n")
+"""
+
 # Extract and sort all needed data
 
 for pathSet in pmfPathsList:
@@ -286,24 +309,46 @@ for pathSet in pmfPathsList:
         summation = 0
         
         for item in range(pmfPeakStartIndex, len(pmfList)):
-            summation += pmfList[item]
+            summation += pmfNormVolList[item]
         
         avgPeakPMFValue = summation / (len(pmfList) - (pmfPeakStartIndex+1))
-        peakListNamesSR[count2].append(avgPeakPMFValue)
-        peakListNamesCL[count1].append(avgPeakPMFValue)
+
+        #peakListNamesSR[count2].append(avgPeakPMFValue)
+
+        peakListNamesCL[count1].append((avgPeakPMFValue)-(paramAList[count1]))
 
         count2 += 1
-    
-    plt.scatter(strainRateList, peakListNamesCL[count1])
 
+    plt.scatter(strainRateList, peakListNamesCL[count1])
+    
     count1 += 1
+
+"""
+for count in range (0,6):
+    strainRateList[count] = str(strainRateList[count])
+    pmfPeakListL20[count] = str(pmfPeakListL20[count])
+    pmfPeakListL30[count] = str(pmfPeakListL30[count])
+    pmfPeakListL40[count] = str(pmfPeakListL40[count])
+    pmfPeakListL50[count] = str(pmfPeakListL50[count])
+    pmfPeakListL60[count] = str(pmfPeakListL60[count])
+    pmfPeakListL70[count] = str(pmfPeakListL70[count])
+    pmfPeakListL80[count] = str(pmfPeakListL80[count])
+    pmfPeakListL90[count] = str(pmfPeakListL90[count])
+    pmfPeakListL100[count] = str(pmfPeakListL100[count])
+
+    outFile.write(strainRateList[count] + '\t' + pmfPeakListL20[count] + '\t' + pmfPeakListL30[count] + '\t' + pmfPeakListL40[count]
+        + '\t' + pmfPeakListL50[count] + '\t' + pmfPeakListL60[count] + '\t' + pmfPeakListL70[count] + '\t' + pmfPeakListL80[count]
+        + '\t' + pmfPeakListL90[count] + '\t' + pmfPeakListL100[count] + '\n')
+
+outFile.close()
+"""
 
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 plt.title("Peak PMF vs Strain Rate")
 plt.xlabel("Strain Rate (A/fs)")
 plt.xscale("log")
 plt.xlim(xmin = 10e-7, xmax=0.002)
-plt.ylabel("Peak PMF (kCal/mol)")
+plt.ylabel("Peak PMF, normalized by volume (m^2) minus parameter 'a'")
 legendList = ["N=20", "N=30", "N=40", "N=50", "N=60", "N=70", "N=80", "N=90", "N=100"]
 plt.legend(legendList)
 plt.show()

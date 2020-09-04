@@ -286,16 +286,16 @@ for pathSet in pmfPathsList:
         summation = 0
         
         for item in range(pmfPeakStartIndex, len(pmfList)):
-            summation += pmfList[item]
+            summation += pmfNormVolList[item]
         
-        avgPeakPMFValue = summation / (len(pmfList) - (pmfPeakStartIndex+1))
+        avgPeakPMFValue = summation / (len(pmfNormVolList) - (pmfPeakStartIndex+1))
         peakListNamesSR[count2].append(avgPeakPMFValue)
         peakListNamesCL[count1].append(avgPeakPMFValue)
 
         count2 += 1
-    
-    plt.scatter(strainRateList, peakListNamesCL[count1])
 
+    plt.scatter(strainRateList, peakListNamesCL[count1])
+    
     count1 += 1
 
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
