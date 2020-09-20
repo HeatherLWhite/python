@@ -13,12 +13,12 @@ import numpy as np
 # Edit this list of paths for the PMF text files.
 
 pmfPaths = [
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/graft_density_variation/gd0-07_L50/sr0_000005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/graft_density_variation/gd0-07_L50/sr0_00001/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/graft_density_variation/gd0-07_L50/sr0_00005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/graft_density_variation/gd0-07_L50/sr0_0001/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/graft_density_variation/gd0-07_L50/sr0_0005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/graft_density_variation/gd0-07_L50/sr0_001/PMF.txt"
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/graft_density_variation/gd0-10_L50/sr0_000005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/graft_density_variation/gd0-10_L50/sr0_00001/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/graft_density_variation/gd0-10_L50/sr0_00005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/graft_density_variation/gd0-10_L50/sr0_0001/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/graft_density_variation/gd0-10_L50/sr0_0005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/graft_density_variation/gd0-10_L50/sr0_001/PMF.txt"
     ]
 
 # Edit this list of strain rates for the PMF text files.
@@ -37,12 +37,12 @@ strainRateList = [
 # Units are in m^3.
 
 volumeList = [
-    float(5.16E-25),
-    float(5.16E-25),
-    float(5.16E-25),
-    float(5.16E-25),
-    float(5.16E-25),
-    float(5.16E-25)
+    float(7.35E-25),
+    float(7.35E-25),
+    float(7.35E-25),
+    float(7.35E-25),
+    float(7.35E-25),
+    float(7.35E-25)
     ]
 
 ############################## STOP EDITING #############################
