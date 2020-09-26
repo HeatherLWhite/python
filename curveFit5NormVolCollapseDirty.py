@@ -1,5 +1,5 @@
 """
-PMF = a+[log(SR/c)]^b
+PMF = a+[log(SR/c)^b]
 a: zero-shear limit
 b: concavity
 c: target low shear rate at which there is no variation anymore
@@ -66,12 +66,12 @@ yL50 = np.array([
     ])
 
 yL60 = np.array([
-    6.095E+28,
-    6.623E+28,
-    7.669E+28,
-    8.740E+28,
-    1.181E+29,
-    1.428E+29
+    6.03656E+28,
+    6.52949E+28,
+    7.54163E+28,
+    8.5306E+28,
+    1.0154E+29,
+    1.14761E+29
     ])
 
 yL70 = np.array([
@@ -106,8 +106,8 @@ yL100 = np.array([
     9.549E+28,
     1.114E+29,
     1.235E+29,
-    1.463E+29
-    #2.135E+29
+    1.463E+29,
+    1.616E+29
     ])
 
 yvalues = [yL20, yL30, yL40, yL50, yL60, yL70, yL80, yL90, yL100]
@@ -125,12 +125,15 @@ aList = []
 bList = []
 
 for count in range(0, len(yvalues)):
-
+    
+    x = xarray
+    
+    """
     if yvalues[count].all == yL100.all:
         x = xL100
     else:
         x = xarray
-
+    """
     params, params_covariance = curve_fit(func, x, yvalues[count], p0=[3e28, 0.20], maxfev=10000)
     aList.append(params[0])
     bList.append(params[1])

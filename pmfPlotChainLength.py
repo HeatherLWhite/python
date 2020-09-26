@@ -13,12 +13,12 @@ import numpy as np
 # Edit this list of paths for the PMF text files.
 
 pmfPaths = [
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/sr0_000005_rerun3/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/rerun1/sr0_00001/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/rerun1/sr0_00005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/rerun1/sr0_0001/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/rerun1/sr0_0005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/sr0_001_rerun3/PMF.txt"
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_000005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_00001/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_00005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_0001/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_0005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_001/PMF.txt"
     ]
 
 # Edit this list of strain rates for the PMF text files.
@@ -37,12 +37,12 @@ strainRateList = [
 # Units are in m^3.
 
 volumeList = [
-    float(5.25E-25),
-    float(5.25E-25),
-    float(5.25E-25),
-    float(5.25E-25),
-    float(5.25E-25),
-    float(5.25E-25)
+    float(4.56E-25),
+    float(4.56E-25),
+    float(4.56E-25),
+    float(4.56E-25),
+    float(4.56E-25),
+    float(4.56E-25)
     ]
 
 ############################## STOP EDITING #############################
@@ -152,9 +152,9 @@ for count in range(0,numPlots):
     plt.plot(totalStrainList, pmfList)
 
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
-plt.title("PMF vs Total Strain")
-plt.xlabel("Total Strain (A)")
-plt.ylabel("PMF (kCal/mol)")
+plt.title("Strain Rate")
+plt.xlabel("Total Displacement (A)")
+plt.ylabel("\u03A8 (kCal)")
 plt.legend(legendList)
 plt.show()
 
@@ -164,7 +164,7 @@ legendList = []
 
 for count in range(0,numPlots):
 
-    legendList.append("SR = " + str(strainRateList[count]) + " A/fs")
+    legendList.append("SR = " + str(strainRateList[count]) + " $\AA$/fs")
 
     extractData(strainRateList[count], volumeList[count], pmfPaths[count])
 
@@ -172,9 +172,9 @@ for count in range(0,numPlots):
     pmfNormPeakList = extractData(strainRateList[count], volumeList[count], pmfPaths[count])[2]
     plt.plot(totalStrainList, pmfNormPeakList)
 
-plt.title("Normalized PMF (plateau) vs Total Strain")
-plt.xlabel("Total Strain (A)")
-plt.ylabel("PMF")
+plt.title("Strain Rates for N=50, \u03C3=0.05 chains/$nm^2$")
+plt.xlabel("Total Displacement ($\AA$)")
+plt.ylabel("\u03A8 (kCal/$m^3$)")
 plt.legend(legendList)
 plt.show()
 
@@ -184,7 +184,7 @@ legendList = []
 
 for count in range(0,numPlots):
 
-    legendList.append("SR = " + str(strainRateList[count]) + " A/fs")
+    legendList.append("SR = " + str(strainRateList[count]) + " $\AA$/fs")
 
     extractData(strainRateList[count], volumeList[count], pmfPaths[count])
 
@@ -192,8 +192,8 @@ for count in range(0,numPlots):
     pmfNormVolList = extractData(strainRateList[count], volumeList[count], pmfPaths[count])[3]
     plt.plot(totalStrainList, pmfNormVolList)
 
-plt.title("Normalized PMF (vol) vs Total Strain")
-plt.xlabel("Total Strain (A)")
-plt.ylabel("PMF (kCal/mol-m^3)")
+plt.title("Strain Rates for N=50, \u03C3=0.05 chains/$nm^2$")
+plt.xlabel("Total Displacement ($\AA$)")
+plt.ylabel("\u03A8 (kCal/$m^3$)")
 plt.legend(legendList)
 plt.show()

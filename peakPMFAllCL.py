@@ -43,12 +43,12 @@ pmfPathsL50 = [
     ]
 
 pmfPathsL60 = [
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_000005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_00001/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_00005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_0001/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_0005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_001/PMF.txt"
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/rerun1_gd0-05_L60/sr0_000005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/rerun1_gd0-05_L60/sr0_00001/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/rerun1_gd0-05_L60/sr0_00005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/rerun1_gd0-05_L60/sr0_0001/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/rerun1_gd0-05_L60/sr0_0005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/rerun1_gd0-05_L60/sr0_001/PMF.txt"
     ]
 
 pmfPathsL70 = [
@@ -286,6 +286,13 @@ plt.bar(ind+2*width, pmfPeakListSR0_00005, width, label = "SR=0.00005 A/fs")
 plt.bar(ind+3*width, pmfPeakListSR0_0001, width, label = "SR=0.0001 A/fs")
 plt.bar(ind+4*width, pmfPeakListSR0_0005, width, label = "SR=0.0005 A/fs")
 plt.bar(ind+5*width, pmfPeakListSR0_001, width, label = "SR=0.001 A/fs")
+
+print(pmfPeakListSR0_000005)
+print(pmfPeakListSR0_00001)
+print(pmfPeakListSR0_00005)
+print(pmfPeakListSR0_0001)
+print(pmfPeakListSR0_0005)
+print(pmfPeakListSR0_001)
 
 plt.xlabel("Chain Length")
 plt.xticks(ind+0.4, xMarkerList)

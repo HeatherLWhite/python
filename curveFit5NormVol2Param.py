@@ -1,5 +1,5 @@
 """
-PMF = a+[log(SR/c)]^b
+PMF = a+[log(SR/c)^b]
 a: zero-shear limit
 b: concavity
 c: target low shear rate at which there is no variation anymore
@@ -19,7 +19,7 @@ xarray = np.array([
     0.0005,
     0.001
     ])
-
+"""
 xL100 = np.array([
     5.00E-06,
     1.00E-05,
@@ -28,7 +28,7 @@ xL100 = np.array([
     0.0005
     #0.001
     ])
-
+"""
 yL20 = np.array([
     2.114E+28,
     2.229E+28,
@@ -66,12 +66,12 @@ yL50 = np.array([
     ])
 
 yL60 = np.array([
-    6.095E+28,
-    6.623E+28,
-    7.669E+28,
-    8.740E+28,
-    1.181E+29,
-    1.428E+29
+    6.03656E+28,
+    6.52949E+28,
+    7.54163E+28,
+    8.5306E+28,
+    1.0154E+29,
+    1.14761E+29
     ])
 
 yL70 = np.array([
@@ -106,8 +106,8 @@ yL100 = np.array([
     9.549E+28,
     1.114E+29,
     1.235E+29,
-    1.463E+29
-    #2.135E+29
+    1.463E+29,
+    1.616E+29
     ])
 
 yvalues = [yL20, yL30, yL40, yL50, yL60, yL70, yL80, yL90, yL100]
@@ -117,7 +117,7 @@ xdummy = np.linspace(0.0000001, 0.001, 500)
 def func(x, a, b):
     return a * (1 + (x/(1e-5))**b)
 
-dataLabels = ['Data - L20', 'Data - L30', 'Data - L40', 'Data - L50', 'Data - L60', 'Data - L70', 'Data - L80', 'Data - L90', 'Data - L100']
+dataLabels = ['N=20', 'N=30', 'N=40', 'N=50', 'N=60', 'N=70', 'N=80', 'N=90', 'N=100']
 fitLabels = ['Fit - L20', 'Fit - L30', 'Fit - L40', 'Fit - L50', 'Fit - L60', 'Fit - L70', 'Fit - L80', 'Fit - L90', 'Fit - L100']
 
 LList = [20, 30, 40, 50, 60, 70, 80, 90, 100]
@@ -126,11 +126,13 @@ bList = []
 
 for count in range(0, len(yvalues)):
 
+    x = xarray
+    """
     if yvalues[count].all == yL100.all:
         x = xL100
     else:
         x = xarray
-
+    """
     params, params_covariance = curve_fit(func, x, yvalues[count], p0=[6e28, 0.1], maxfev=10000)
     aList.append(params[0])
     bList.append(params[1])
@@ -138,24 +140,26 @@ for count in range(0, len(yvalues)):
     #print("Covariance for [a b c] for", dataLabels[count], ':', params_covariance)
 
     plt.scatter(x, yvalues[count], label=dataLabels[count])
-    plt.plot(xdummy, func(xdummy, params[0], params[1]), label=fitLabels[count])
+    plt.plot(xdummy, func(xdummy, params[0], params[1]))
 
-plt.xlim(10e-8,10e-1)
-plt.legend(loc='best')
-plt.ylabel('Peak PMF (kCal/mol-m^3)')
+plt.xlim(10e-8,5e-3)
+plt.ylim(-0.15e29, 1.8e29)
+plt.legend(loc='lower left', fontsize='small', ncol=5)
+plt.ylabel('Plateau \u03A8 (kCal/$m^3$)')
 plt.xscale('log')
-plt.xlabel('log (Strain Rate (A/fs))')
-plt.title('Curve fits: PMF=a*[1+(SR/c)^b]')
+plt.xlabel('Strain Rate ($\AA$/fs)')
+plt.title(r'$\psi_{plateau}=a[1+(\frac{SR}{c})^b]$, $c=1e^{-5}$')
+plt.text(5e-5, 0.12e29, '\u03C3=0.05 chains/$nm^2$', fontsize=12)
 plt.show()
 
 plt.scatter(LList, aList)
-plt.xlabel('Chain Length')
+plt.xlabel('Chain Length, N')
 plt.ylabel('a')
-plt.title('Value of "a" in PMF=a*[1+(SR/c)^b]')
+plt.title("Value of Parameter 'a'")
 plt.show()
 
 plt.scatter(LList, bList)
-plt.xlabel('Chain Length')
+plt.xlabel('Chain Length, N')
 plt.ylabel('b')
-plt.title('Value of "b" in PMF=a*[1+(SR/c)^b]')
+plt.title('Value of "b" in $PMF=a[1+(SR/1e^-5)^b]$')
 plt.show()
