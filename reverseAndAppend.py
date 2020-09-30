@@ -11,13 +11,13 @@ import numpy as np
 ##########################################
 
 # Tensile file
-pathTensile = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L50/sr0_001/PMF.txt"
+pathTensile = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L50/sr0_000005/PMF.txt"
 
 # Compressive file
-pathCompress = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/compression/chain_length_variation/gd0-05_L30/sr0_001/PMF.txt"
+pathCompress = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/compression/chain_length_variation/gd0-05_L30/sr0_000005/PMF.txt"
 
 # Combined file
-pathCombined = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L30/sr0_001/PMF.txt"
+pathCombined = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L30/sr0_000005/PMF.txt"
 
 infileTensile = open(pathTensile, 'r')
 line1 = infileTensile.readline()
