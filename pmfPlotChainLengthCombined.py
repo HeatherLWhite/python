@@ -89,14 +89,10 @@ def extractData(strainRate, volume, path):
     ####################################################################################################
 
     numTimesteps = len(timestepList)
-    timeList = []
     totalStrainList = []
 
     for item in timestepList:
-        adjustedTimestep = item - timestepList[0]
-        timeList.append(adjustedTimestep)
-
-        totalStrain = float(adjustedTimestep) * strainRate
+        totalStrain = float(item) * strainRate
         totalStrain = round(totalStrain, 3)
         totalStrainList.append(totalStrain)
 
@@ -193,7 +189,7 @@ for count in range(0,numPlots):
     pmfNormVolList = extractData(strainRateList[count], volumeList[count], pmfPaths[count])[3]
     plt.plot(totalStrainList, pmfNormVolList, c=colorlist[count])
 
-plt.title("Strain Rates for N=50, \u03C3=0.05 chains/$nm^2$")
+plt.title("Strain Rates for N=30, \u03C3=0.05 chains/$nm^2$")
 plt.xlabel("Total Displacement ($\AA$)")
 plt.ylabel("\u03A8 (kCal/$m^3$)")
 plt.legend(legendList)

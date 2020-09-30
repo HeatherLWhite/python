@@ -124,6 +124,8 @@ LList = [20, 30, 40, 50, 60, 70, 80, 90, 100]
 aList = []
 bList = []
 
+colorlist = ['firebrick', 'chocolate', 'goldenrod', 'forestgreen', 'seagreen', 'teal', 'cornflowerblue', 'mediumorchid', 'palevioletred']
+
 for count in range(0, len(yvalues)):
 
     x = xarray
@@ -139,8 +141,8 @@ for count in range(0, len(yvalues)):
     print("Parameters [a b] for", dataLabels[count], ':', params)
     #print("Covariance for [a b c] for", dataLabels[count], ':', params_covariance)
 
-    plt.scatter(x, yvalues[count], label=dataLabels[count])
-    plt.plot(xdummy, func(xdummy, params[0], params[1]))
+    plt.scatter(x, yvalues[count], c=colorlist[count], label=dataLabels[count])
+    plt.plot(xdummy, func(xdummy, params[0], params[1]), c=colorlist[count])
 
 plt.xlim(10e-8,5e-3)
 plt.ylim(-0.15e29, 1.8e29)
