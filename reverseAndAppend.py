@@ -11,13 +11,13 @@ import numpy as np
 ##########################################
 
 # Tensile file
-pathTensile = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L50/sr0_000005/PMF.txt"
+pathTensile = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L50/sr0_001/PMF.txt"
 
 # Compressive file
-pathCompress = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/compression/chain_length_variation/gd0-05_L30/sr0_000005/PMF.txt"
+pathCompress = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/compression/chain_length_variation/gd0-05_L30/sr0_001/PMF.txt"
 
 # Combined file
-pathCombined = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L30/sr0_000005/PMF.txt"
+pathCombined = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L30/sr0_001/PMF.txt"
 
 infileTensile = open(pathTensile, 'r')
 line1 = infileTensile.readline()
@@ -107,7 +107,9 @@ adjustmentTensile = timestepListTensile[0]
 for count in range(0, len(timestepListTensile)):
     timestepListTensile[count] = timestepListTensile[count] - adjustmentTensile
 
-#Combine into single pmf and timestep lists
+###############################################################
+### This section combines the tensile and compressive data. ###
+###############################################################
 
 pmfListCombined = []
 for item in pmfListCompressShort:
@@ -116,18 +118,22 @@ for item in pmfListCompressShort:
 for item in pmfListTensile:
     pmfListCombined.append(item)
 
+timestepListCombined = []
+for item in timestepListCompressShort:
+    timestepListCombined.append(item)
 
+for item in timestepListTensile:
+    timestepListCombined.append(item)
 
-
-
-
-# plt.plot(pmfListTensile)
+# plt.plot(timestepListCombined, pmfListCombined)
 # plt.show()
 
-# plt.plot(pmfListCompress)
-# plt.show()
+######################################
+### Print data to a new text file. ###
+######################################
 
-plt.plot(pmfListCombined)
-plt.show()
+outfile.write(line1 + line2)
+for count in range(0, len(timestepListCombined)):
+    outfile.write(str(timestepListCombined[count]) + ' ' + str(pmfListCombined[count]) + '\n')
 
 outfile.close()
