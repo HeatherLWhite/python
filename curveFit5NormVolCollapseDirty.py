@@ -9,7 +9,7 @@ log(SR/c)>1
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-import sympy as sym
+from scipy import stats
 
 xarray = np.array([
     5.00E-06,
@@ -124,29 +124,54 @@ LList = [20, 30, 40, 50, 60, 70, 80, 90, 100]
 aList = []
 bList = []
 
+linearX = []
+linearY = []
+
+linearXList = []
+linearYList = []
+
 for count in range(0, len(yvalues)):
     
     x = xarray
     
-    """
-    if yvalues[count].all == yL100.all:
-        x = xL100
-    else:
-        x = xarray
-    """
     params, params_covariance = curve_fit(func, x, yvalues[count], p0=[3e28, 0.20], maxfev=10000)
     aList.append(params[0])
     bList.append(params[1])
 
     print("Parameters [a b] for", dataLabels[count], ':', params)
-    #print("Covariance for [a b c] for", dataLabels[count], ':', params_covariance)
 
     plt.scatter(1+(x/1e-5)**bList[count], yvalues[count]/aList[count], label=dataLabels[count])
 
+    linearX.append(1+(x/1e-5)**bList[count])
+    linearY.append(yvalues[count]/aList[count])
+
+for item in linearX:
+    for subitem in item:
+        linearXList.append(subitem)
+
+for item in linearY:
+    for subitem in item:
+        linearYList.append(subitem)
+
+slope, intercept, r_value, p_value, std_err = stats.linregress(linearXList, linearYList)
+print("Slope:", slope)
+print("Intercept:", intercept)
+print("R-value:", r_value)
+rSquared = round(r_value ** 2, 3)
+print("R^2:", rSquared)
+R2text = "$R^2 = $" + str(rSquared)
+
+newxDummy = np.linspace(1.5, 4.5, 10)
+newyDummy = []
+for item in newxDummy:
+    newyDummy.append(slope*item+intercept)
+
+plt.plot(newxDummy, newyDummy, 'red', zorder=0)
+plt.text(3.75, 3.5, R2text, fontsize=13)
+
 #plt.xlim(10e-7,10e-2)
 plt.legend(loc='best')
-plt.ylabel('Peak PMF/a')
-plt.xscale('log')
-plt.xlabel('1+(SR/1e-5)^b')
-plt.title('Curve fits: PMF=a*[1+(SR/c)^b]')
+plt.ylabel('$\psi_{plateau}/a$')
+plt.xlabel('$1+(SR/1e-5)^b$')
+plt.title(r'$\psi_{plateau}=a[1+(\frac{SR}{c})^b]$, $c=1e^{-5}$')
 plt.show()
