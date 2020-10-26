@@ -19,16 +19,7 @@ xarray = np.array([
     0.0005,
     0.001
     ])
-"""
-xL100 = np.array([
-    5.00E-06,
-    1.00E-05,
-    5.00E-05,
-    0.0001,
-    0.0005
-    #0.001
-    ])
-"""
+
 yL20 = np.array([
     2.114E+28,
     2.229E+28,
@@ -110,6 +101,33 @@ yL100 = np.array([
     1.616E+29
     ])
 
+########################################################
+### This function divides lists by Avogadro's Number ###
+########################################################
+
+def divideAvogadro(inlist):
+    avogadroNum = 6.022 * (10**23) * 1000
+    outlist = []
+    for index in range(0,len(inlist)):
+        outlist.append(inlist[index] / avogadroNum)
+    return(outlist)
+
+#####################################################
+### Divide PMF values by Avogadro's Number * 1000 ###
+#####################################################
+
+yL20 = divideAvogadro(yL20)
+yL30 = divideAvogadro(yL30)
+yL40 = divideAvogadro(yL40)
+yL50 = divideAvogadro(yL50)
+yL60 = divideAvogadro(yL60)
+yL70 = divideAvogadro(yL70)
+yL80 = divideAvogadro(yL80)
+yL90 = divideAvogadro(yL90)
+yL100 = divideAvogadro(yL100)
+
+#####################################################
+
 yvalues = [yL20, yL30, yL40, yL50, yL60, yL70, yL80, yL90, yL100]
 
 xdummy = np.linspace(0.0000001, 0.001, 500)
@@ -129,12 +147,6 @@ colorlist = ['firebrick', 'chocolate', 'goldenrod', 'forestgreen', 'seagreen', '
 for count in range(0, len(yvalues)):
 
     x = xarray
-    """
-    if yvalues[count].all == yL100.all:
-        x = xL100
-    else:
-        x = xarray
-    """
     params, params_covariance = curve_fit(func, x, yvalues[count], p0=[6e28, 0.1], maxfev=10000)
     aList.append(params[0])
     bList.append(params[1])
@@ -145,19 +157,22 @@ for count in range(0, len(yvalues)):
     plt.plot(xdummy, func(xdummy, params[0], params[1]), c=colorlist[count])
 
 plt.xlim(10e-8,5e-3)
-plt.ylim(-0.15e29, 1.8e29)
+plt.ylim(-25, 300)
 plt.legend(loc='lower left', fontsize='small', ncol=5)
-plt.ylabel('Plateau \u03A8 (kCal/$m^3$)')
-plt.xscale('log')
+plt.ylabel('$\u03A8_{MAX}$ (kCal/$m^3$)')
+plt.xscale('log') 
 plt.xlabel('Strain Rate ($\AA$/fs)')
-plt.title(r'$\psi_{plateau}=a[1+(\frac{SR}{c})^b]$, $c=1e^{-5}$')
-plt.text(5e-5, 0.12e29, '\u03C3=0.05 chains/$nm^2$', fontsize=12)
+#plt.title(r'$\psi_{plateau}=a[1+(\frac{SR}{c})^b]$, $c=1e^{-5}$')
+plt.text(2e-5, 275, '\u03C3=0.05 chains/$nm^2$', fontsize=12)
+plt.text(2.5e-3, 275, 'a', fontsize=20, weight = 'bold')
 plt.show()
 
 plt.scatter(LList, aList)
-plt.xlabel('Chain Length, N')
-plt.ylabel('a')
-plt.title("Value of Parameter 'a'")
+plt.xticks(fontsize = 14)
+plt.xlabel('Chain Length (N)', fontsize=14)
+plt.yticks(fontsize = 14)
+plt.ylabel('$\u03A8_0$', fontsize=14)
+#plt.title("Value of Parameter 'a'")
 plt.show()
 
 plt.scatter(LList, bList)

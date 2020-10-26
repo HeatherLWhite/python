@@ -319,7 +319,7 @@ for count in range (0,6):
 
     outFile.write(strainRateList[count] + '\t' + pmfPeakListGD0_01[count] + '\t' + pmfPeakListGD0_02[count] + '\t' + pmfPeakListGD0_03[count]
         + '\t' + pmfPeakListGD0_04[count] + '\t' + pmfPeakListGD0_05[count] + '\t' + pmfPeakListGD0_07[count] + '\t' + pmfPeakListGD0_08[count]
-        + '\t' + pmfPeakListGD0_10[count] + '\t' + pmfPeakListGD0_10[count] + '\n')
+        + '\t' + pmfPeakListGD0_10[count] + '\t' + pmfPeakListGD0_12[count] + '\n')
 
 outFile.close()
 
