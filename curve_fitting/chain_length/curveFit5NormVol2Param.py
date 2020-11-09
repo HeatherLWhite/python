@@ -9,7 +9,20 @@ log(SR/c)>1
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-import sympy as sym
+
+colorHex = [
+    # Blue
+    '#0000FF',
+    '#0000CC',
+    '#4C0099',
+    '#660066',
+    '#660033',
+    '#99004C',
+    '#990000',
+    '#CC0000',
+    '#FF0000',
+    # Red
+    ]
 
 xarray = np.array([
     5.00E-06,
@@ -142,7 +155,7 @@ LList = [20, 30, 40, 50, 60, 70, 80, 90, 100]
 aList = []
 bList = []
 
-colorlist = ['firebrick', 'chocolate', 'goldenrod', 'forestgreen', 'seagreen', 'teal', 'cornflowerblue', 'mediumorchid', 'palevioletred']
+#colorlist = ['firebrick', 'chocolate', 'goldenrod', 'forestgreen', 'seagreen', 'teal', 'cornflowerblue', 'mediumorchid', 'palevioletred']
 
 for count in range(0, len(yvalues)):
 
@@ -153,25 +166,31 @@ for count in range(0, len(yvalues)):
     print("Parameters [a b] for", dataLabels[count], ':', params)
     #print("Covariance for [a b c] for", dataLabels[count], ':', params_covariance)
 
-    plt.scatter(x, yvalues[count], c=colorlist[count], label=dataLabels[count])
-    plt.plot(xdummy, func(xdummy, params[0], params[1]), c=colorlist[count])
+    plt.scatter(x, yvalues[count], c=colorHex[count], label=dataLabels[count], s=70)
+    plt.plot(xdummy, func(xdummy, params[0], params[1]), color = colorHex[count], linewidth = 2)
 
-plt.xlim(10e-8,5e-3)
-plt.ylim(-25, 300)
-plt.legend(loc='lower left', fontsize='small', ncol=5)
-plt.ylabel('$\u03A8_{MAX}$ (kCal/$m^3$)')
 plt.xscale('log') 
-plt.xlabel('Strain Rate ($\AA$/fs)')
+plt.xlim(10e-8,2e-3)
+plt.xticks(fontsize = 14)
+plt.xlabel('Strain Rate ($\AA$/fs)', fontsize = 14)
+plt.ylim(-25, 350)
+plt.ylabel('$\u03A8_{max}$ (kCal/$m^3$)', fontsize = 14)
+plt.legend(loc='lower left', fontsize='medium', ncol=5)
 #plt.title(r'$\psi_{plateau}=a[1+(\frac{SR}{c})^b]$, $c=1e^{-5}$')
-plt.text(2e-5, 275, '\u03C3=0.05 chains/$nm^2$', fontsize=12)
-plt.text(2.5e-3, 275, 'a', fontsize=20, weight = 'bold')
+plt.text(5e-5, 300, '\u03C3=0.05 chains/$nm^2$', fontsize=12)
+plt.text(2.5e-8, 370, '(a)', fontsize=20, weight = 'bold')
 plt.show()
 
-plt.scatter(LList, aList)
-plt.xticks(fontsize = 14)
-plt.xlabel('Chain Length (N)', fontsize=14)
-plt.yticks(fontsize = 14)
-plt.ylabel('$\u03A8_0$', fontsize=14)
+for index in range(0,len(colorHex)):
+    plt.scatter(LList[index], aList[index], color = colorHex[index], s = 500)
+
+plt.xticks(fontsize = 30, weight = 'bold')
+plt.xlabel('Chain Length (N)', fontsize=30, weight = 'bold')
+plt.tick_params(axis = 'y', right = True, left = False, labelright = True, labelleft = False)
+plt.yticks(fontsize = 30, weight = 'bold')
+#plt.ylabel('$\u03A8_0$', fontsize=40, weight = 'bold', labelpad = -390, rotation = 270)
+
+
 #plt.title("Value of Parameter 'a'")
 plt.show()
 

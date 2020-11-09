@@ -3,6 +3,7 @@ LAMMPS PMF.txt files that are then plotted. """
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import rcParams
 
 #########################################################################
 ########################### EDIT THESE VALUES ###########################
@@ -155,15 +156,18 @@ for count in range(0,numPlots):
     extractData(strainRateList[count], volumeList[count], pmfPaths[count])
 
     totalStrainList = extractData(strainRateList[count], volumeList[count], pmfPaths[count])[0]
-    pmfList = extractData(strainRateList[count], volumeList[count], pmfPaths[count])[1]
+    pmfNormVolList = extractData(strainRateList[count], volumeList[count], pmfPaths[count])[3]
     
-    plt.plot(totalStrainList, pmfList, c=colorlist[count])
+    pmfNormVolList = divideAvogadro(pmfNormVolList)
 
-plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+    plt.plot(totalStrainList, pmfNormVolList)
+    #plt.plot(totalStrainList, pmfList, c=colorlist[count])
+
+#plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 #plt.title("Strain Rates for N=50, \u03C3=0.05 chains/$nm^2$")
 plt.xlabel("Total Displacement ($\AA$)")
-plt.ylabel("\u03A8 (kCal)")
-plt.text(-9.5, 7.5e4, "Strain Rate ($\AA$/fs)")
+plt.ylabel(r"$\psi$ (kCal/$m^3$)")
+plt.text(-9.5, 320, "Strain Rate ($\AA$/fs)")
 plt.text(30, 1e4, "N = 50 monomers")
 plt.text(30, 0.5e4, "\u03C3 = 0.05 chains/$nm^2$")
 plt.legend(legendList, bbox_to_anchor=(0.25, 0.8), bbox_transform=plt.gcf().transFigure)
@@ -181,14 +185,16 @@ for count in range(0,numPlots):
 
     totalStrainList = extractData(strainRateList[count], volumeList[count], pmfPaths[count])[0]
     pmfNormPeakList = extractData(strainRateList[count], volumeList[count], pmfPaths[count])[2]
-    plt.plot(totalStrainList, pmfNormPeakList, c=colorlist[count])
+    plt.plot(totalStrainList, pmfNormPeakList, linewidth = 2)
+    #plt.plot(totalStrainList, pmfNormPeakList, c=colorlist[count])
 
 #plt.title("Strain Rates for N=50, \u03C3=0.05 chains/$nm^2$")
-plt.xticks(fontsize = 20)
-plt.xlabel("Total Displacement ($\AA$)", fontsize=20)
-plt.yticks(fontsize =20)
-plt.ylabel("$\u03A8 / \u03A8_{MAX}$", fontsize=20)
+plt.xticks(fontsize = 40, weight = "bold")
+plt.xlabel("Total Displacement ($\AA$)", fontsize=40, weight = "bold")
+plt.yticks(fontsize =40, weight = "bold")
+plt.ylabel(r"$\psi$ / $\psi_{max}$", fontsize=40, weight = "bold")
 #plt.legend(legendList)
+plt.figure(figsize=(5,5))
 plt.show()
 
 # Plot PMF normalized by inter-plate volume vs total strain
@@ -205,13 +211,14 @@ for count in range(0,numPlots):
     pmfNormVolList = extractData(strainRateList[count], volumeList[count], pmfPaths[count])[3]
     pmfNormVolListDivAvo = divideAvogadro(pmfNormVolList)
 
-    plt.plot(totalStrainList, pmfNormVolListDivAvo, c=colorlist[count])
+    plt.plot(totalStrainList, pmfNormVolListDivAvo)
+    #plt.plot(totalStrainList, pmfNormVolListDivAvo, c=colorlist[count])
 
 
 #plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 #plt.title("Strain Rates for N=50, \u03C3=0.05 chains/$nm^2$")
 plt.xlabel("Total Displacement ($\AA$)")
-plt.ylabel("\u03A8 (kCal/$m^3$)")
+plt.ylabel(r"$\psi$ (kCal/$m^3$)")
 plt.text(-9.5, 3.3e2, "Strain Rate ($\AA$/fs)")
 plt.text(30, 3e1, "N = 50 monomers")
 plt.text(30, 0, "\u03C3* = 0.05 chains/$nm^2$")
