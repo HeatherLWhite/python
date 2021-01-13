@@ -1,3 +1,5 @@
+"""USED IN FIGURES"""
+
 """ This script is used to perform calculations on data from 
 LAMMPS PMF.txt files that are then plotted. """
 
@@ -14,12 +16,12 @@ from matplotlib import rcParams
 # Edit this list of paths for the PMF text files.
 
 pmfPaths = [
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50/sr0_000005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50/sr0_00001/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50/sr0_00005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50/sr0_0001/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50/sr0_0005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50/sr0_001/PMF.txt"
+    "/mnt/c/Users/heath/Ubuntu/PGN/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50/sr0_000005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/PGN/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50/sr0_00001/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/PGN/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50/sr0_00005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/PGN/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50/sr0_0001/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/PGN/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50/sr0_0005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/PGN/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50/sr0_001/PMF.txt"
     ]
 
 # Edit this list of strain rates for the PMF text files.
@@ -55,6 +57,7 @@ volumeList = [
 ### by inter-plate volume).                                                                    ###
 ##################################################################################################
 
+#return totalStrainList, pmfList, pmfNormPeakList, pmfNormVolList
 def extractData(strainRate, volume, path):
 
     ##########################################
@@ -92,7 +95,7 @@ def extractData(strainRate, volume, path):
     totalStrainList = []
 
     for item in timestepList:
-        totalStrain = float(item) * strainRate
+        totalStrain = float(item) * strainRate * 4
         totalStrain = round(totalStrain, 3)
         totalStrainList.append(totalStrain)
 
@@ -167,7 +170,7 @@ for count in range(0,numPlots):
 #plt.title("Strain Rates for N=50, \u03C3=0.05 chains/$nm^2$")
 plt.xlabel("Total Displacement ($\AA$)")
 plt.ylabel(r"$\psi$ (kCal/$m^3$)")
-plt.text(-9.5, 320, "Strain Rate ($\AA$/fs)")
+plt.text(-38, 320, "Strain Rate ($\AA$/fs)")
 plt.text(30, 1e4, "N = 50 monomers")
 plt.text(30, 0.5e4, "\u03C3 = 0.05 chains/$nm^2$")
 plt.legend(legendList, bbox_to_anchor=(0.25, 0.8), bbox_transform=plt.gcf().transFigure)
@@ -211,16 +214,18 @@ for count in range(0,numPlots):
     pmfNormVolList = extractData(strainRateList[count], volumeList[count], pmfPaths[count])[3]
     pmfNormVolListDivAvo = divideAvogadro(pmfNormVolList)
 
-    plt.plot(totalStrainList, pmfNormVolListDivAvo)
+    plt.plot(totalStrainList, pmfNormVolListDivAvo, linewidth = 3)
     #plt.plot(totalStrainList, pmfNormVolListDivAvo, c=colorlist[count])
 
 
 #plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 #plt.title("Strain Rates for N=50, \u03C3=0.05 chains/$nm^2$")
-plt.xlabel("Total Displacement ($\AA$)")
-plt.ylabel(r"$\psi$ (kCal/$m^3$)")
-plt.text(-9.5, 3.3e2, "Strain Rate ($\AA$/fs)")
-plt.text(30, 3e1, "N = 50 monomers")
-plt.text(30, 0, "\u03C3* = 0.05 chains/$nm^2$")
-plt.legend(legendList, bbox_to_anchor=(0.25, 0.82), bbox_transform=plt.gcf().transFigure)
+plt.xlabel("Total Displacement ($\AA$)", fontsize = 25)
+plt.xticks(fontsize = 20)
+plt.ylabel(r"$\psi$ (kCal/$m^3$)", fontsize = 25)
+plt.yticks(fontsize = 20)
+plt.text(-45, 3.3e2, "Pulling Velocity ($\AA$/fs)", fontsize = 20)
+#plt.text(30, 3e1, "N = 50 monomers")
+#plt.text(30, 0, "\u03C3* = 0.05 chains/$nm^2$")
+plt.legend(legendList, fontsize = 20, bbox_to_anchor=(0.25, 0.82), bbox_transform=plt.gcf().transFigure)
 plt.show()

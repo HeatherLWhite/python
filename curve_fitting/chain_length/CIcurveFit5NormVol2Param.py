@@ -9,6 +9,7 @@ log(SR/c)>1
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+from scipy.stats.distributions import t
 
 colorHex = [
     # Blue
@@ -172,10 +173,23 @@ for count in range(0, len(yvalues)):
 
     x = xarray
     params, params_covariance = curve_fit(func, x, yvalues[count], p0=[6e28, 0.1], maxfev=10000)
+
+    # CI calculation from http://kitchingroup.cheme.cmu.edu/blog/2013/02/12/Nonlinear-curve-fitting-with-parameter-confidence-intervals/
+    alpha = 0.05 # 95% confidence interval
+    n = len(yvalues[count]) # number of data points
+    p = len(params) # number of parameters
+    dof = max(0, n-p) # number of degrees of freedom
+    tval = t.ppf(1.0-alpha/2., dof)
+    paramNames = ['a','b']
+    for i, p, var in zip(range(n), params, np.diag(params_covariance)):
+        sigma = var**0.5
+        print('CI for', dataLabels[count], paramNames[i], ': {1} [{2}  {3}]'.format(i, p, p - sigma*tval, p + sigma*tval))
+
     aList.append(params[0])
     bList.append(params[1])
     print("Parameters [a b] for", dataLabels[count], ':', params)
-    #print("Covariance for [a b c] for", dataLabels[count], ':', params_covariance)
+    print("Covariance for [a b] for", str(dataLabels[count]), ':')
+    print(params_covariance, '\n')
 
     plt.scatter(x, yvalues[count], c=colorHex[count], label=dataLabels[count], s=70)
     plt.plot(xdummy, func(xdummy, params[0], params[1]), color = colorHex[count], linewidth = 2)
@@ -190,7 +204,7 @@ plt.legend(loc='lower left', fontsize='medium', ncol=5)
 #plt.title(r'$\psi_{plateau}=a[1+(\frac{SR}{c})^b]$, $c=1e^{-5}$')
 plt.text(5e-5, 300, '\u03C3=0.5 chains/$nm^2$', fontsize=12)
 plt.text(2.5e-8, 370, '(a)', fontsize=20, weight = 'bold')
-plt.show()
+#plt.show()
 
 for index in range(0,len(colorHex)):
     plt.scatter(LList[index], aList[index], color = colorHex[index], s = 500)
@@ -203,10 +217,10 @@ plt.yticks(fontsize = 30, weight = 'bold')
 
 
 #plt.title("Value of Parameter 'a'")
-plt.show()
+#plt.show()
 
 plt.scatter(LList, bList)
 plt.xlabel('Chain Length, N')
 plt.ylabel('b')
 plt.title('Value of "b" in $PMF=a[1+(SR/1e^-5)^b]$')
-plt.show()
+#plt.show()

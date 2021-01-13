@@ -86,23 +86,31 @@ def extractData(strainRate, volume, path):
 def func(x, k):
     return 0.5 * k * x**2
 
+angstrom_around_eq = 3
+
+
 for choice in range(0,6):
 
     pathList = ["sr0_000005", "sr0_00001", "sr0_00005", "sr0_0001", "sr0_0005", "sr0_001"]
-    pmfPath = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50-TotalDisp2A/"+pathList[choice]+"/PMF.txt"
+    pmfPath = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50-TotalDisp" +str(angstrom_around_eq)+ "A/"+pathList[choice]+"/PMF.txt"
     SRList = [0.000005, 0.00001, 0.00005, 0.0001, 0.0005, 0.001]
     peakList = [5.42E28, 6.06E28, 7.06E28, 7.48E28, 8.98E28, 1.04E29]
     volume = 3.8401E-25 #N = 50, norm by volume
-    #peakList = divideAvogadro(peakList)
     strainRate = SRList[choice]
     peakPMF = peakList[choice]
     
+
+    x_curve_shift_list = [0.30, 0.30, 0.20, 0.25, 0, 0]
+    y_curve_shift_list = [0.000817139, 0.000608856, 0.000456355, 0.000397285, 0, 0]
+
+    x_curve_shift = x_curve_shift_list[choice]
+    y_curve_shift = y_curve_shift_list[choice]
 
     xlist = []  # Total displacement
     ylist = []  # PMF norm peak value
 
     for item in extractData(strainRate, volume, pmfPath)[0]: # Returns totalStrainList
-        xlist.append(item)
+        xlist.append(item+x_curve_shift)
 
     for item in extractData(strainRate, volume, pmfPath)[3]: # Returns pmfList norm vol
         ylist.append(item)
@@ -110,6 +118,11 @@ for choice in range(0,6):
     # Normalize pmfList by peakPMF
     for index in range(0, len(ylist)):
         ylist[index] = ylist[index] / peakPMF
+
+    # Add y shift
+    for index in range(0, len(ylist)):
+        if (xlist[index] - x_curve_shift) < 0:
+            ylist[index] = ylist[index] + y_curve_shift 
     
     params, params_covariance = curve_fit(func, xlist, ylist, p0=None, maxfev=10000)
 
@@ -118,44 +131,56 @@ for choice in range(0,6):
     print("Peak PMF value: " + str(peakPMF))
     print("k value: " + str(params) + "\n")
     
-    xdummy = np.linspace(-2, 2, 1000)
+    xdummy = np.linspace(-angstrom_around_eq, angstrom_around_eq, 1000)
     ydummy = []
     k = params
 
     for item in xdummy:
-        ydummy.append(0.5 * k * item**2)
+        ydummy.append(0.5 * k * (item)**2)
 
-    legendList1 = [
-        "0.000005   5.636e-3   1.000", 
-        "0.00001     5.567e-3   0.988", 
-        "0.00005     5.851e-3   1.038", 
-        "0.0001       6.278e-3   1.114", 
-        "0.0005       7.141e-3   1.267", 
-        "0.001         7.977e-3   1.415"
+    legendList1 = [ # +/- 1A
+        "0.000005   0.0095   1.000", 
+        "0.00001     0.0092   0.967", 
+        "0.00005     0.0097   1.027", 
+        "0.0001       0.0102   1.075", 
+        "0.0005       0.0126   1.326",
+        "0.001         0.0151   1.596"
         ]
- 
+    
     plt.plot(xdummy,ydummy, linewidth = 3)
     
     plt.xlabel("Total Displacement ($\AA$)")
     plt.ylabel(r"$\psi$ / $\psi_{max}$")
     #plt.ylim(-10E-27, 1.75E-25)
     plt.legend(legendList1, loc = "upper center", bbox_to_anchor=(0.50, 0.92))
-        
+       
 plt.show()
 
-######################################3
-    
 
-pmfPath = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50-TotalDisp2A/sr0_00005/PMF.txt"
-strainRate = 0.00005
-peakPMF = peakList[2]
-volume = 3.8401E-25 #N = 50
+
+######################################3
+
+choice = 5
+
+pathList = ["sr0_000005", "sr0_00001", "sr0_00005", "sr0_0001", "sr0_0005", "sr0_001"]
+pmfPath = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50-TotalDisp" +str(angstrom_around_eq)+ "A/"+pathList[choice]+"/PMF.txt"
+SRList = [0.000005, 0.00001, 0.00005, 0.0001, 0.0005, 0.001]
+peakList = [5.42E28, 6.06E28, 7.06E28, 7.48E28, 8.98E28, 1.04E29]
+volume = 3.8401E-25 #N = 50, norm by volume
+
+x_curve_shift_list = [0.30, 0.25, 0.20, 0.25, 0, 0]
+y_curve_shift_list = [0.000817139, 0.000608856, 0.000456355, 0.000397285, 0, 0]
+
+strainRate = SRList[choice]
+peakPMF = peakList[choice]
+x_curve_shift = x_curve_shift_list[choice]
+y_curve_shift = y_curve_shift_list[choice]
 
 xlist = []  # Total displacement
 ylist = []  # PMF norm peak value
 
 for item in extractData(strainRate, volume, pmfPath)[0]: # Returns totalStrainList
-    xlist.append(item)
+    xlist.append(item+x_curve_shift)
 
 for item in extractData(strainRate, volume, pmfPath)[3]: # Returns pmfList norm vol
     ylist.append(item)
@@ -164,19 +189,27 @@ for item in extractData(strainRate, volume, pmfPath)[3]: # Returns pmfList norm 
 for index in range(0, len(ylist)):
     ylist[index] = ylist[index] / peakPMF 
 
+#for item in ylist:
+#    print(item)
+
+# Add y shift
+for index in range(0, len(ylist)):
+    if (xlist[index] - x_curve_shift) < 0:
+        ylist[index] = ylist[index] + y_curve_shift 
+
 params, params_covariance = curve_fit(func, xlist, ylist, p0=None, maxfev=10000) 
 
-xdummy = np.linspace(-2, 2, 1000)
+xdummy = np.linspace(-angstrom_around_eq, angstrom_around_eq, 1000)
 ydummy = []
 k = params
 
 for item in xdummy:
-    ydummy.append(0.5 * k * item**2)
+    ydummy.append(0.5 * k * (item)**2)
 
 legendList2 = ["Fit", "Data"]
 
 plt.plot(xdummy,ydummy, linewidth = 4)
-plt.plot(xlist, ylist, linewidth = 4)
+plt.plot(xlist, ylist, marker = ".", linestyle = "None", linewidth = 4)
 plt.xlabel("Total Displacement ($\AA$)", fontsize=12)
 plt.xticks(fontsize = 12)
 plt.ylabel(r"$\psi$ / $\psi_{max}$", fontsize=12)

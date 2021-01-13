@@ -149,10 +149,10 @@ xdummy = np.linspace(0.0000001, 0.001, 500)
 def func(x, a, b):
     return a * (1 + (x/(1e-5))**b)
 
-dataLabels = ['\u03C3=0.01', '\u03C3=0.02', '\u03C3=0.03', '\u03C3=0.04', '\u03C3=0.05', '\u03C3=0.07', '\u03C3=0.08', '\u03C3=0.10', '\u03C3=0.12']
+dataLabels = ['\u03C3=0.08', '\u03C3=0.18', '\u03C3=0.28', '\u03C3=0.40', '\u03C3=0.50', '\u03C3=0.66', '\u03C3=0.76', '\u03C3=0.96', '\u03C3=1.14']
 #fitLabels = ['Fit - GD = 0.01', 'Fit - GD = 0.02', 'Fit - GD = 0.03', 'Fit - GD = 0.04', 'Fit - GD = 0.05', 'Fit - GD = 0.07', 'Fit - GD = 0.08', 'Fit - GD = 0.10', 'Fit - GD = 0.12']    
 
-GDList = [0.01, 0.02, 0.03, 0.04, 0.05, 0.07, 0.08, 0.10, 0.12]
+GDList = [0.08, 0.18, 0.28, 0.40, 0.50, 0.66, 0.76, 0.96, 1.14]
 aList = []
 bList = []
 #cList = []
@@ -175,11 +175,12 @@ for count in range(0, len(yvalues)):
     plt.plot(xdummy, func(xdummy, params[0], params[1]), c=colorHex[count])
 
 plt.xlim(10e-8,2e-3)
+plt.xticks(fontsize = 14)
 plt.ylim(-50, 300)
 plt.legend(loc='lower left', fontsize='medium', ncol=5)
 plt.ylabel('$\u03A8_{max}$ (kCal/$m^3$)', fontsize = 14)
 plt.xscale('log')
-plt.xlabel('Strain Rate ($\AA$/fs)', fontsize = 14)
+plt.xlabel('Pulling Velocity ($\AA$/fs)', fontsize = 14)
 #plt.title('Curve fits: PMF=a*[1+(SR/c)]^b')
 plt.text(5e-5, 260, 'N=50 monomers', fontsize=12)
 plt.text(2.5e-8, 315, '(b)', fontsize=20, weight = 'bold')

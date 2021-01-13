@@ -13,12 +13,12 @@ import numpy as np
 # Edit this list of paths for the PMF text files.
 
 pmfPaths = [
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L30/sr0_000005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L30/sr0_00001/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L30/sr0_00005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L30/sr0_0001/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L30/sr0_0005/PMF.txt",
-    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L30/sr0_001/PMF.txt"
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/sr0_000005_rerun3/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/rerun1/sr0_00001/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/rerun1/sr0_00005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/rerun1/sr0_0001/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/rerun1/sr0_0005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/sr0_001_rerun3/PMF.txt"
     ]
 
 # Edit this list of strain rates for the PMF text files.
@@ -37,12 +37,12 @@ strainRateList = [
 # Units are in m^3.
 
 volumeList = [
-    float(2.43E-25),
-    float(2.43E-25),
-    float(2.43E-25),
-    float(2.43E-25),
-    float(2.43E-25),
-    float(2.43E-25)
+    float(5.25E-25),
+    float(5.25E-25),
+    float(5.25E-25),
+    float(5.25E-25),
+    float(5.25E-25),
+    float(5.25E-25)
     ]
 
 ############################## STOP EDITING #############################

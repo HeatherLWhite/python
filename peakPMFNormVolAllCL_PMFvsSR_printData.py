@@ -50,7 +50,7 @@ pmfPathsL60 = [
     "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_0005/PMF.txt",
     "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L60/sr0_001/PMF.txt"
     ]
-
+"""
 pmfPathsL70 = [
     "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/sr0_000005_rerun3/PMF.txt",
     "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/rerun1/sr0_00001/PMF.txt",
@@ -58,6 +58,15 @@ pmfPathsL70 = [
     "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/rerun1/sr0_0001/PMF.txt",
     "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/rerun1/sr0_0005/PMF.txt",
     "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/gd0-05_L70/sr0_001_rerun3/PMF.txt"
+    ]
+"""
+pmfPathsL70 = [
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/rerun4_gd0-05_L70/sr0_000005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/rerun4_gd0-05_L70/sr0_00001/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/rerun4_gd0-05_L70/sr0_00005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/rerun4_gd0-05_L70/sr0_0001/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/rerun4_gd0-05_L70/sr0_0005/PMF.txt",
+    "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tensile/chain_length_variation/rerun4_gd0-05_L70/sr0_001/PMF.txt"
     ]
 
 pmfPathsL80 = [
