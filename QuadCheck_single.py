@@ -46,7 +46,7 @@ def extractData(strainRate, volume, path):
     totalStrainList = []
 
     for item in timestepList:
-        totalStrain = float(item) * strainRate
+        totalStrain = float(item) * strainRate * 4
         totalStrain = round(totalStrain, 3) 
         totalStrainList.append(totalStrain)
 
@@ -92,7 +92,7 @@ angstrom_around_eq = 3
 for choice in range(0,6):
 
     pathList = ["sr0_000005", "sr0_00001", "sr0_00005", "sr0_0001", "sr0_0005", "sr0_001"]
-    pmfPath = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50-TotalDisp" +str(angstrom_around_eq)+ "A/"+pathList[choice]+"/PMF.txt"
+    pmfPath = "/mnt/c/Users/heath/Ubuntu/PGN/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50-TotalDisp" +str(angstrom_around_eq)+ "A/"+pathList[choice]+"/PMF.txt"
     SRList = [0.000005, 0.00001, 0.00005, 0.0001, 0.0005, 0.001]
     peakList = [5.42E28, 6.06E28, 7.06E28, 7.48E28, 8.98E28, 1.04E29]
     volume = 3.8401E-25 #N = 50, norm by volume
@@ -131,20 +131,20 @@ for choice in range(0,6):
     print("Peak PMF value: " + str(peakPMF))
     print("k value: " + str(params) + "\n")
     
-    xdummy = np.linspace(-angstrom_around_eq, angstrom_around_eq, 1000)
+    xdummy = np.linspace(-angstrom_around_eq*4, angstrom_around_eq*4, 1000)
     ydummy = []
     k = params
 
     for item in xdummy:
         ydummy.append(0.5 * k * (item)**2)
 
-    legendList1 = [ # +/- 1A
-        "0.000005   0.0095   1.000", 
-        "0.00001     0.0092   0.967", 
-        "0.00005     0.0097   1.027", 
-        "0.0001       0.0102   1.075", 
-        "0.0005       0.0126   1.326",
-        "0.001         0.0151   1.596"
+    legendList1 = [ 
+        "0.000005   0.00059   1.000", 
+        "0.00001     0.00057   0.970", 
+        "0.00005     0.00061   1.041", 
+        "0.0001       0.00066   1.117", 
+        "0.0005       0.00079   1.331",
+        "0.001         0.00095   1.601"
         ]
     
     plt.plot(xdummy,ydummy, linewidth = 3)
@@ -160,15 +160,15 @@ plt.show()
 
 ######################################3
 
-choice = 5
+choice = 2
 
 pathList = ["sr0_000005", "sr0_00001", "sr0_00005", "sr0_0001", "sr0_0005", "sr0_001"]
-pmfPath = "/mnt/c/Users/heath/Ubuntu/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50-TotalDisp" +str(angstrom_around_eq)+ "A/"+pathList[choice]+"/PMF.txt"
+pmfPath = "/mnt/c/Users/heath/Ubuntu/PGN/SimulationResults/heather_sim/tension_and_compression/chain_length_variation/gd0-05_L50-TotalDisp" +str(angstrom_around_eq)+ "A/"+pathList[choice]+"/PMF.txt"
 SRList = [0.000005, 0.00001, 0.00005, 0.0001, 0.0005, 0.001]
 peakList = [5.42E28, 6.06E28, 7.06E28, 7.48E28, 8.98E28, 1.04E29]
 volume = 3.8401E-25 #N = 50, norm by volume
 
-x_curve_shift_list = [0.30, 0.25, 0.20, 0.25, 0, 0]
+x_curve_shift_list = [0.30*4, 0.25*4, 0.20*4, 0.25*4, 0*4, 0*4]
 y_curve_shift_list = [0.000817139, 0.000608856, 0.000456355, 0.000397285, 0, 0]
 
 strainRate = SRList[choice]
@@ -199,7 +199,7 @@ for index in range(0, len(ylist)):
 
 params, params_covariance = curve_fit(func, xlist, ylist, p0=None, maxfev=10000) 
 
-xdummy = np.linspace(-angstrom_around_eq, angstrom_around_eq, 1000)
+xdummy = np.linspace(-angstrom_around_eq*4, angstrom_around_eq*4, 1000)
 ydummy = []
 k = params
 
