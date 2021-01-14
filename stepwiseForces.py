@@ -10,6 +10,9 @@ import numpy as np
 # Number of timesteps per round of SMD
 timesteps_per_SMDround = 1200000/40
 
+timesteps_between_EQrounds = 30000
+timesteps_per_EQoutput = 1000
+
 # Strain rate being used
 strainRate = 0.00005 # A/fs
 
@@ -23,6 +26,13 @@ path_nocycle = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/nocycle_noeq_run2/PMF.tx
 path_cycle_noeq = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_noeq/Poly2Poly1/"
 path_cycle_5keq = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_5keq/Poly2Poly1/"
 path_cycle_50keq = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_50keq/Poly2Poly1/"
+path_cycle_75keq = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_75keq/smdGG/Poly2Poly1/"
+
+path_cycle_5keq_equildata = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_5keq_run2/equilGG/Poly2Poly1/"
+path_cycle_50keq_equildata = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_50keq_run2/equilGG/Poly2Poly1/"
+path_cycle_75keq_equildata = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_75keq/equilGG/Poly2Poly1/"
+
+
 ########## FUNCTIONS ###############
 
 #return totalStrainList, pmfList for simulation with PMF output from SMD
@@ -105,6 +115,36 @@ def extractDataCycle(FCTpath, FCTnumFiles, FCTstrainRate, FCTtimesteps_per_SMDro
     
     return totalStrainList, yforceList, pmfList
 
+def extractEquilDataCycle(FCTpath, FCTnumFiles, FCTstrainRate, FCTtimesteps_per_EQoutput, FCTtimesteps_between_EQrounds):
+    
+    currentEQtimestep = 10000
+    timestepList = []
+    yforceList = []
+
+    for count1 in range(0, FCTnumFiles):
+        fileName =  "GG_Poly2Poly1_Loop" + str(count1+1) + ".txt"
+        filePath = FCTpath + fileName
+
+        infile = open(filePath, 'r')
+        infile.readline()
+        infile.readline()
+
+        for line in infile:
+            line = line.strip()
+            line = line.split(" ")
+            yforce = float(line[2])
+            yforceList.append(-yforce)
+            timestepList.append(currentEQtimestep)
+            currentEQtimestep += FCTtimesteps_per_EQoutput 
+            
+        currentEQtimestep += FCTtimesteps_between_EQrounds - FCTtimesteps_per_EQoutput 
+        infile.close()   
+
+    return timestepList, yforceList
+    
+####################################
+
+
 totalStrain_nocycle = extractDataNoCycle(path_nocycle, strainRate)[0]
 PMF_nocycle = extractDataNoCycle(path_nocycle, strainRate)[1]
 
@@ -120,19 +160,39 @@ totalStrain_cycle_50keq = extractDataCycle(path_cycle_50keq, numFiles, strainRat
 yforceList_cycle_50keq = extractDataCycle(path_cycle_50keq, numFiles, strainRate, timesteps_per_SMDround)[1]
 PMF_cycle_50keq = extractDataCycle(path_cycle_50keq, numFiles, strainRate, timesteps_per_SMDround)[2]
 
+totalStrain_cycle_75keq = extractDataCycle(path_cycle_75keq, numFiles, strainRate, timesteps_per_SMDround)[0]
+yforceList_cycle_75keq = extractDataCycle(path_cycle_75keq, numFiles, strainRate, timesteps_per_SMDround)[1]
+PMF_cycle_75keq = extractDataCycle(path_cycle_75keq, numFiles, strainRate, timesteps_per_SMDround)[2]
+
+
+eq_timesteps_cycle_5keq = extractEquilDataCycle(path_cycle_5keq_equildata, numFiles, strainRate, timesteps_per_EQoutput, timesteps_between_EQrounds)[0]
+eq_yforce_cycle_5keq = extractEquilDataCycle(path_cycle_5keq_equildata, numFiles, strainRate, timesteps_per_EQoutput, timesteps_between_EQrounds)[1]
+
+eq_timesteps_cycle_50keq = extractEquilDataCycle(path_cycle_50keq_equildata, numFiles, strainRate, timesteps_per_EQoutput, timesteps_between_EQrounds)[0]
+eq_yforce_cycle_50keq = extractEquilDataCycle(path_cycle_50keq_equildata, numFiles, strainRate, timesteps_per_EQoutput, timesteps_between_EQrounds)[1]
+
+eq_timesteps_cycle_75keq = extractEquilDataCycle(path_cycle_75keq_equildata, numFiles, strainRate, timesteps_per_EQoutput, timesteps_between_EQrounds)[0]
+eq_yforce_cycle_75keq = extractEquilDataCycle(path_cycle_75keq_equildata, numFiles, strainRate, timesteps_per_EQoutput, timesteps_between_EQrounds)[1]
+
 ############ PLOTS #######################
 
-legendList = [
+
+# SMD data
+plt.figure(1)
+
+legendList1 = [
     "SMD PMF Output (no cycle)",
     "Calc. PMF (cycle, no eq)",
     "Calc. PMF (cycle, 5k ts eq)",
-    "Calc. PMF (cycle, 50k ts eq)"
+    "Calc. PMF (cycle, 50k ts eq)",
+    "Calc. PMF (cycle, 75k ts eq)"
     ]
 
 plt.scatter(totalStrain_nocycle, PMF_nocycle, s = 8)
 plt.scatter(totalStrain_cycle_noeq, PMF_cycle_noeq, s = 8)
 plt.scatter(totalStrain_cycle_5keq, PMF_cycle_5keq, s = 8)
 plt.scatter(totalStrain_cycle_50keq, PMF_cycle_50keq, s = 8)
+plt.scatter(totalStrain_cycle_75keq, PMF_cycle_75keq, s = 8)
 
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 plt.title("PMF Calculations for N=50, \u03C3=0.05 chains/$nm^2$", fontsize = 14)
@@ -140,5 +200,61 @@ plt.xlabel("Total Displacement ($\AA$)", fontsize = 14)
 plt.xticks(fontsize = 14)
 plt.ylabel(r"$\psi$ (kcal/mol)", fontsize = 14)
 plt.yticks(fontsize = 14)
-plt.legend(legendList, scatterpoints=4, fontsize = 10)
+plt.legend(legendList1, scatterpoints=4, fontsize = 10)
+#plt.show()
+
+# Equilibration data
+plt.figure(2)
+
+legendList2 = [
+    "Equilibration PMF (50k ts eq)"
+    ]
+
+plt.scatter(eq_timesteps_cycle_50keq, eq_yforce_cycle_50keq, s = 8)
+
+plt.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
+plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+plt.title("y Force Calculations for N=50, \u03C3=0.05 chains/$nm^2$", fontsize = 14)
+plt.xlabel("Timesteps", fontsize = 14)
+plt.xticks(fontsize = 14)
+plt.ylabel("y Force", fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(legendList2, scatterpoints=4, fontsize = 10)
+plt.show()
+
+
+plt.figure(3)
+
+legendList2 = [
+    "Equilibration PMF (5k ts eq)"
+    ]
+
+plt.scatter(eq_timesteps_cycle_5keq, eq_yforce_cycle_5keq, s = 8)
+
+plt.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
+plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+plt.title("y Force Calculations for N=50, \u03C3=0.05 chains/$nm^2$", fontsize = 14)
+plt.xlabel("Timesteps", fontsize = 14)
+plt.xticks(fontsize = 14)
+plt.ylabel("y Force", fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(legendList2, scatterpoints=4, fontsize = 10)
+plt.show()
+
+plt.figure(3)
+
+legendList2 = [
+    "Equilibration PMF (75k ts eq)"
+    ]
+
+plt.scatter(eq_timesteps_cycle_75keq, eq_yforce_cycle_75keq, s = 8)
+
+plt.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
+plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+plt.title("y Force Calculations for N=50, \u03C3=0.05 chains/$nm^2$", fontsize = 14)
+plt.xlabel("Timesteps", fontsize = 14)
+plt.xticks(fontsize = 14)
+plt.ylabel("y Force", fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(legendList2, scatterpoints=4, fontsize = 10)
 plt.show()
