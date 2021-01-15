@@ -19,16 +19,16 @@ strainRate = 0.00005 # A/fs
 # Number of PMF files in simulation
 numFiles = 40
 
-#equilibriumVolume = 3.8401E-25 # m^3
+equilibriumVolume = 3.8401E-25 # m^3
 
 # File paths
 path_nocycle = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/nocycle_noeq_run2/PMF.txt"
 path_cycle_noeq = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_noeq/Poly2Poly1/"
-path_cycle_5keq = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_5keq/Poly2Poly1/"
+path_cycle_5keq = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_5keq_run3/smdGG/Poly2Poly1/"
 path_cycle_50keq = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_50keq/Poly2Poly1/"
 path_cycle_75keq = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_75keq/smdGG/Poly2Poly1/"
 
-path_cycle_5keq_equildata = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_5keq_run2/equilGG/Poly2Poly1/"
+path_cycle_5keq_equildata = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_5keq_run3/equilGG/Poly2Poly1/"
 path_cycle_50keq_equildata = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_50keq_run2/equilGG/Poly2Poly1/"
 path_cycle_75keq_equildata = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_75keq/equilGG/Poly2Poly1/"
 
@@ -36,7 +36,7 @@ path_cycle_75keq_equildata = "/mnt/c/Users/heath/Ubuntu/PGN_Revisions/cycle_75ke
 ########## FUNCTIONS ###############
 
 #return totalStrainList, pmfList for simulation with PMF output from SMD
-def extractDataNoCycle(FCTpath, FCTstrainRate):
+def extractDataNoCycle(FCTpath, FCTstrainRate, FCTvolume):
 
     infile = open(FCTpath, 'r')
     infile.readline()
@@ -56,6 +56,19 @@ def extractDataNoCycle(FCTpath, FCTstrainRate):
 
     infile.close()
 
+    # Convert PMF to kcal/m^3
+    
+    mysteryParam = 1000
+    avogadro = 6.022 * 10**23 * mysteryParam
+    convertedPMFList = []
+
+    for item in pmfList:
+        convertedPMF = item / avogadro
+        convertedPMF = convertedPMF / FCTvolume
+        convertedPMFList.append(convertedPMF)
+
+    # Convert timesteps to total strain (displacement)
+
     numTimesteps = len(timestepList)
     totalStrainList = []
 
@@ -67,10 +80,10 @@ def extractDataNoCycle(FCTpath, FCTstrainRate):
         totalStrain = round(totalStrain, 3)
         totalStrainList.append(totalStrain)
 
-    return totalStrainList, pmfList
+    return totalStrainList, pmfList, convertedPMFList
 
 #return totalStrainList, pmfList for simulation with yforces
-def extractDataCycle(FCTpath, FCTnumFiles, FCTstrainRate, FCTtimesteps_per_SMDround):
+def extractDataCycle(FCTpath, FCTnumFiles, FCTstrainRate, FCTtimesteps_per_SMDround, FCTvolume):
 
     currentSMDtimestep = 0
     timestepList = []
@@ -112,8 +125,20 @@ def extractDataCycle(FCTpath, FCTnumFiles, FCTstrainRate, FCTtimesteps_per_SMDro
         runningPMF = pmfList[count2-1] + additionalPMF
         runningPMF = round(runningPMF, 3)
         pmfList.append(runningPMF)
+
+    # Convert PMF to kcal/m^3
     
-    return totalStrainList, yforceList, pmfList
+    mysteryParam = 1000
+    avogadro = 6.022 * 10**23 * mysteryParam
+    convertedPMFList = []
+
+    for item in pmfList:
+        convertedPMF = item / avogadro
+        convertedPMF = convertedPMF / FCTvolume
+        convertedPMFList.append(convertedPMF)
+
+    
+    return totalStrainList, yforceList, pmfList, convertedPMFList
 
 def extractEquilDataCycle(FCTpath, FCTnumFiles, FCTstrainRate, FCTtimesteps_per_EQoutput, FCTtimesteps_between_EQrounds):
     
@@ -145,24 +170,24 @@ def extractEquilDataCycle(FCTpath, FCTnumFiles, FCTstrainRate, FCTtimesteps_per_
 ####################################
 
 
-totalStrain_nocycle = extractDataNoCycle(path_nocycle, strainRate)[0]
-PMF_nocycle = extractDataNoCycle(path_nocycle, strainRate)[1]
+totalStrain_nocycle = extractDataNoCycle(path_nocycle, strainRate, equilibriumVolume)[0]
+PMF_nocycle = extractDataNoCycle(path_nocycle, strainRate, equilibriumVolume)[2]
 
-totalStrain_cycle_noeq = extractDataCycle(path_cycle_noeq, numFiles, strainRate, timesteps_per_SMDround)[0]
-yforceList_cycle_noeq = extractDataCycle(path_cycle_noeq, numFiles, strainRate, timesteps_per_SMDround)[1]
-PMF_cycle_noeq = extractDataCycle(path_cycle_noeq, numFiles, strainRate, timesteps_per_SMDround)[2]
+totalStrain_cycle_noeq = extractDataCycle(path_cycle_noeq, numFiles, strainRate, timesteps_per_SMDround, equilibriumVolume)[0]
+yforceList_cycle_noeq = extractDataCycle(path_cycle_noeq, numFiles, strainRate, timesteps_per_SMDround, equilibriumVolume)[1]
+PMF_cycle_noeq = extractDataCycle(path_cycle_noeq, numFiles, strainRate, timesteps_per_SMDround, equilibriumVolume)[3]
 
-totalStrain_cycle_5keq = extractDataCycle(path_cycle_5keq, numFiles, strainRate, timesteps_per_SMDround)[0]
-yforceList_cycle_5keq = extractDataCycle(path_cycle_5keq, numFiles, strainRate, timesteps_per_SMDround)[1]
-PMF_cycle_5keq = extractDataCycle(path_cycle_5keq, numFiles, strainRate, timesteps_per_SMDround)[2]
+totalStrain_cycle_5keq = extractDataCycle(path_cycle_5keq, numFiles, strainRate, timesteps_per_SMDround, equilibriumVolume)[0]
+yforceList_cycle_5keq = extractDataCycle(path_cycle_5keq, numFiles, strainRate, timesteps_per_SMDround, equilibriumVolume)[1]
+PMF_cycle_5keq = extractDataCycle(path_cycle_5keq, numFiles, strainRate, timesteps_per_SMDround, equilibriumVolume)[3]
 
-totalStrain_cycle_50keq = extractDataCycle(path_cycle_50keq, numFiles, strainRate, timesteps_per_SMDround)[0]
-yforceList_cycle_50keq = extractDataCycle(path_cycle_50keq, numFiles, strainRate, timesteps_per_SMDround)[1]
-PMF_cycle_50keq = extractDataCycle(path_cycle_50keq, numFiles, strainRate, timesteps_per_SMDround)[2]
+totalStrain_cycle_50keq = extractDataCycle(path_cycle_50keq, numFiles, strainRate, timesteps_per_SMDround, equilibriumVolume)[0]
+yforceList_cycle_50keq = extractDataCycle(path_cycle_50keq, numFiles, strainRate, timesteps_per_SMDround, equilibriumVolume)[1]
+PMF_cycle_50keq = extractDataCycle(path_cycle_50keq, numFiles, strainRate, timesteps_per_SMDround, equilibriumVolume)[3]
 
-totalStrain_cycle_75keq = extractDataCycle(path_cycle_75keq, numFiles, strainRate, timesteps_per_SMDround)[0]
-yforceList_cycle_75keq = extractDataCycle(path_cycle_75keq, numFiles, strainRate, timesteps_per_SMDround)[1]
-PMF_cycle_75keq = extractDataCycle(path_cycle_75keq, numFiles, strainRate, timesteps_per_SMDround)[2]
+totalStrain_cycle_75keq = extractDataCycle(path_cycle_75keq, numFiles, strainRate, timesteps_per_SMDround, equilibriumVolume)[0]
+yforceList_cycle_75keq = extractDataCycle(path_cycle_75keq, numFiles, strainRate, timesteps_per_SMDround, equilibriumVolume)[1]
+PMF_cycle_75keq = extractDataCycle(path_cycle_75keq, numFiles, strainRate, timesteps_per_SMDround, equilibriumVolume)[3]
 
 
 eq_timesteps_cycle_5keq = extractEquilDataCycle(path_cycle_5keq_equildata, numFiles, strainRate, timesteps_per_EQoutput, timesteps_between_EQrounds)[0]
@@ -194,14 +219,14 @@ plt.scatter(totalStrain_cycle_5keq, PMF_cycle_5keq, s = 8)
 plt.scatter(totalStrain_cycle_50keq, PMF_cycle_50keq, s = 8)
 plt.scatter(totalStrain_cycle_75keq, PMF_cycle_75keq, s = 8)
 
-plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+#plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 plt.title("PMF Calculations for N=50, \u03C3=0.05 chains/$nm^2$", fontsize = 14)
 plt.xlabel("Total Displacement ($\AA$)", fontsize = 14)
 plt.xticks(fontsize = 14)
-plt.ylabel(r"$\psi$ (kcal/mol)", fontsize = 14)
+plt.ylabel(r"$\psi$ (kcal/$m^3$)", fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.legend(legendList1, scatterpoints=4, fontsize = 10)
-#plt.show()
+plt.show()
 
 # Equilibration data
 plt.figure(2)
@@ -220,7 +245,7 @@ plt.xticks(fontsize = 14)
 plt.ylabel("y Force", fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.legend(legendList2, scatterpoints=4, fontsize = 10)
-plt.show()
+#plt.show()
 
 
 plt.figure(3)
@@ -239,7 +264,7 @@ plt.xticks(fontsize = 14)
 plt.ylabel("y Force", fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.legend(legendList2, scatterpoints=4, fontsize = 10)
-plt.show()
+#plt.show()
 
 plt.figure(3)
 
@@ -257,4 +282,4 @@ plt.xticks(fontsize = 14)
 plt.ylabel("y Force", fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.legend(legendList2, scatterpoints=4, fontsize = 10)
-plt.show()
+#plt.show()
