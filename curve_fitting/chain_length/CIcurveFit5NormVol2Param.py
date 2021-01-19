@@ -34,6 +34,7 @@ xarray = np.array([
     0.001
     ])
 
+
 yL20 = np.array([
     2.114E+28,
     2.229E+28,
@@ -79,16 +80,6 @@ yL60 = np.array([
     1.14761E+29
     ])
 
-"""
-yL70 = np.array([
-    7.734E+28,
-    8.421E+28,
-    9.719E+28,
-    1.022E+29,
-    1.271E+29,
-    1.388E+29,
-    ])
-"""
 yL70 = np.array([
     6.38E+28,
     7.03E+28,
@@ -97,7 +88,6 @@ yL70 = np.array([
     9.99E+28,
     1.26E+29
     ])
-
 
 yL80 = np.array([
     7.437E+28,
@@ -170,8 +160,9 @@ bList = []
 #colorlist = ['firebrick', 'chocolate', 'goldenrod', 'forestgreen', 'seagreen', 'teal', 'cornflowerblue', 'mediumorchid', 'palevioletred']
 
 for count in range(0, len(yvalues)):
-
+    
     x = xarray
+    
     params, params_covariance = curve_fit(func, x, yvalues[count], p0=[6e28, 0.1], maxfev=10000)
 
     # CI calculation from http://kitchingroup.cheme.cmu.edu/blog/2013/02/12/Nonlinear-curve-fitting-with-parameter-confidence-intervals/
@@ -183,7 +174,7 @@ for count in range(0, len(yvalues)):
     paramNames = ['a','b']
     for i, p, var in zip(range(n), params, np.diag(params_covariance)):
         sigma = var**0.5
-        print('CI for', dataLabels[count], paramNames[i], ': {1} [{2}  {3}]'.format(i, p, p - sigma*tval, p + sigma*tval))
+        print('CI for', dataLabels[count], paramNames[i], ': {1} [{2}  {3}] {4}'.format(i, p, p - sigma*tval, p + sigma*tval, sigma*tval))
 
     aList.append(params[0])
     bList.append(params[1])
@@ -194,6 +185,8 @@ for count in range(0, len(yvalues)):
     plt.scatter(x, yvalues[count], c=colorHex[count], label=dataLabels[count], s=70)
     plt.plot(xdummy, func(xdummy, params[0], params[1]), color = colorHex[count], linewidth = 2)
 
+# Extra point [x = 0.0000005, y = 4.747E+28 / (6.022 * (10**23) * 1000)]
+plt.scatter(0.0000005, 4.747E+28 / (6.022 * (10**23) * 1000), c = '#660066', s=70)
 plt.xscale('log') 
 plt.xlim(10e-8,2e-3)
 plt.xticks(fontsize = 14)
@@ -204,20 +197,43 @@ plt.legend(loc='lower left', fontsize='medium', ncol=5)
 #plt.title(r'$\psi_{plateau}=a[1+(\frac{SR}{c})^b]$, $c=1e^{-5}$')
 plt.text(5e-5, 300, '\u03C3=0.5 chains/$nm^2$', fontsize=12)
 plt.text(2.5e-8, 370, '(a)', fontsize=20, weight = 'bold')
-#plt.show()
+plt.show()
 
 for index in range(0,len(colorHex)):
-    plt.scatter(LList[index], aList[index], color = colorHex[index], s = 500)
+    plt.scatter(LList[index], aList[index], color = colorHex[index], s = 200) #s=500
 
 plt.xticks(fontsize = 30, weight = 'bold')
 plt.xlabel('Chain Length (N)', fontsize=30, weight = 'bold')
 plt.tick_params(axis = 'y', right = True, left = False, labelright = True, labelleft = False)
 plt.yticks(fontsize = 30, weight = 'bold')
-#plt.ylabel('$\u03A8_0$', fontsize=40, weight = 'bold', labelpad = -390, rotation = 270)
+"""
+CIstring1 = ('95' + '% ' +  'Confidence Interval')
+CIstring2 = ('        N              CI ')
+CIstring3 = (
+    '        20           $\pm$2.98' + '\n' + 
+    '        30           $\pm$2.04' + '\n' + 
+    '        40           $\pm$2.54' + '\n' +
+    '        50           $\pm$3.00' + '\n' +
+    '        60           $\pm$1.96' + '\n' +
+    '        70           $\pm$7.08' + '\n' +
+    '        80           $\pm$1.57' + '\n' +
+    '        90           $\pm$2.26' + '\n' +
+    '       100          $\pm$2.35' + '\n')
+plt.text(20, 80, CIstring1, fontsize=18, weight = 'bold')
+plt.text(20, 77, CIstring2, fontsize=18, weight = 'bold')
+plt.text(20, 50, CIstring3, fontsize=18)
+"""
 
+yerrorList = [2.98, 2.04, 2.54, 3.00, 1.96, 7.08, 1.57, 2.26, 2.35]
+for datapoint in range (0, len(aList)):
+    xvalue = LList[datapoint]
+    yvalue = aList[datapoint]
+    yerror = yerrorList[datapoint]
+    color = colorHex[datapoint]
+    plt.errorbar(xvalue, yvalue, yerr=yerror, ecolor = color, elinewidth = 3, barsabove=True)
 
-#plt.title("Value of Parameter 'a'")
-#plt.show()
+#plt.title("Projected Zero-Rate PMF", fontsize = 30, weight = 'bold')
+plt.show()
 
 plt.scatter(LList, bList)
 plt.xlabel('Chain Length, N')
