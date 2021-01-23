@@ -35,7 +35,8 @@ dt = decimal.Decimal('0.001') # timestep
 x = [decimal.Decimal('0')]
 v = [kbT]
 KE = [decimal.Decimal('0.5')*m*v[0]**2]
-welltimelist = []
+leftwelltimelist = []
+rightwelltimelist = []
 welltime = 0
 dist_from_eq_list = []
 F_C_list = []
@@ -100,7 +101,10 @@ for count in range(0, N):
             
     # Well time calculations
     if new_x * x[count] < 0:
-        welltimelist.append(welltime)
+        if x[count] < 0:
+            leftwelltimelist.append(welltime)
+        else:
+            rightwelltimelist.append(welltime)
         welltime = 0
     else:
         welltime += 1
@@ -110,11 +114,19 @@ for count in range(0, N):
         print(count, inner_springconst, outer_springconst)
 
 # More well time calculations
-averagewelltime = 0
-for item in welltimelist:
-    averagewelltime += item
-averagewelltime = averagewelltime / len(welltimelist)
-print("Average well time (ts):", str(averagewelltime))
+leftaveragewelltime = 0
+rightaveragewelltime = 0
+
+for item in leftwelltimelist:
+    leftaveragewelltime += item
+for item in rightwelltimelist:
+    rightaveragewelltime += item
+
+leftaveragewelltime = leftaveragewelltime / len(leftwelltimelist)
+rightaveragewelltime = rightaveragewelltime / len(rightwelltimelist)
+
+print("Average well time (left):", str(decimal.Decimal(leftaveragewelltime)*dt))
+print("Average well time (right):", str(decimal.Decimal(rightaveragewelltime)*dt))
 
 # More spring constant calculations
 average_inner_springconst = 0
@@ -133,10 +145,10 @@ print("Spring constant (inner):", average_inner_springconst)
 print("Spring constant (outer):", average_outer_springconst)
 
 ########## PLOTS ##########
-"""
+
 plt.scatter(time, x, s = 2)
-#plt.hlines(1, 0, 1000, color='r')
-#plt.hlines(-1, 0, 1000, color='r')
+plt.hlines(1, 0, 1000, color='r')
+plt.hlines(-1, 0, 1000, color='r')
 plt.title("Problem 1: Position vs Time")
 plt.xlabel('Time')
 plt.ylabel('Position')
@@ -161,9 +173,18 @@ plt.xlabel('Position')
 plt.ylabel('Velocity')
 plt.show()
 
-plt.hist(x, bins = 70, label = "Position")
+hist_counts, hist_bins, hist_bars = plt.hist(x, bins = 70, label = "Position")
 plt.title("Particle Position Frequency")
 plt.show()
+"""
+for item in hist_counts:
+    print(item)
+
+for item in hist_bins:
+    print(item)
+
+for item in hist_bars:
+    print(item)
 
 plt.scatter(dist_from_eq_list, F_C_list)
 plt.title("Problem 1: Force vs Equilibrium")
