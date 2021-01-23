@@ -2,15 +2,13 @@
 For analysis of the group/group output from stepwise PGN plate simulations. 
 """
 
+import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
 from scipy.stats.distributions import t
 
 ######### VARIABLES ###############
-
-equilibriumvalues = [5000, 50000, 75000, 200000, 500000]
-peakPMFvalues = [118.26, 99.88, 91.36, 81.26, 80.17]
 
 # Number of timesteps per round of SMD
 timesteps_per_SMDround = 1200000/40
@@ -151,6 +149,7 @@ def extractDataCycleNoEq(FCTpath, FCTnumFiles, FCTstrainRate, FCTtimesteps_per_S
         convertedPMF = item / avogadro
         convertedPMF = convertedPMF / FCTvolume
         convertedPMFList.append(convertedPMF)
+    print("Max PMF:", convertedPMF)
 
     #print("\n Max PMF for " + FCTpath + ":\n" + str(convertedPMFList[len(convertedPMFList)-1]))
 
@@ -303,7 +302,7 @@ eq_yforce_cycle_500keq = extractEquilDataCycle(path_cycle_500keq_equildata, numF
 
 ############ PLOTS #######################
 
-"""
+
 # SMD data
 legendList1 = [
     "Predicted zero-shear PMF",
@@ -333,7 +332,7 @@ plt.ylabel(r"$\psi$ (kcal/$m^3$)", fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.legend(legendList1, scatterpoints=4, fontsize = 10)
 plt.show()
-"""
+
 
 
 # SMD data - compare # loops for 50k
@@ -356,39 +355,90 @@ plt.legend(legendList1, scatterpoints=4, fontsize = 10)
 plt.show()
 
 
-"""
+
 ###Plot peak values
-x = equilibriumvalues
+
+mysteryParam = 1000
+avogadro = 6.022 * 10**23 * mysteryParam
+
+# Non-stepwise data
+yL50 = np.array([
+    5.421E+28 / avogadro,
+    6.062E+28 / avogadro,
+    7.057E+28 / avogadro,
+    7.482E+28 / avogadro,
+    8.980E+28 / avogadro,
+    1.048E+29 / avogadro
+    ])
+
+xL50 = [5e-6, 1e-5, 5e-5, 1e-4, 5e-4, 1e-3]
+
+xdummy1 = np.linspace(1E-6, 1E-4, 500)
+
+# Stepwise data
+effectiveSRvalues = [5e-5, 4.29E-5, 1.88E-5, 1.43E-5, 6.52E-6, 2.83E-6]
+peakPMFvalues = [109.77, 118.26, 99.88, 91.36, 81.26, 80.17]
+
+x = effectiveSRvalues
 y = peakPMFvalues
-xdummy = np.linspace(10E2, 10E6, 500)
+
+xdummy2 = np.linspace(1E-6, 1.1E-2, 500)
+
 aList = []
 bList = []
 
-
-#def func(x, a, b):
-#    return a * (1 + (x/(1e-5))**-b)
-
 def func(x, a, b):
-    return a/x+b
+    return a * (1 + (x/(1e-5))**b)
 
-#params, params_covariance = curve_fit(func, x, y, p0=[75, 0.06], maxfev=10000)
-params, params_covariance = curve_fit(func, x, y, p0=[10E9, 100], maxfev=10000)
+# Stepwise data
+params, params_covariance = curve_fit(func, x, y, p0=[75, 0.06], maxfev=10000)
 aList.append(params[0])
 bList.append(params[1])
-print("Parameters [a b]:", params)
+
+# CI calculation from http://kitchingroup.cheme.cmu.edu/blog/2013/02/12/Nonlinear-curve-fitting-with-parameter-confidence-intervals/
+alpha = 0.05 # 95% confidence interval
+n = len(y) # number of data points
+p = len(params) # number of parameters
+dof = max(0, n-p) # number of degrees of freedom
+tval = t.ppf(1.0-alpha/2., dof)
+paramNames = ['a','b']
+for i, p, var in zip(range(n), params, np.diag(params_covariance)):
+    sigma = var**0.5
+    print('CI for stepwise fit', paramNames[i], ': {1} [{2}  {3}] {4}'.format(i, p, p - sigma*tval, p + sigma*tval, sigma*tval))
+
 plt.scatter(x, y, s=70)
-plt.plot(xdummy, func(xdummy, params[0], params[1]), linewidth = 2)
+plt.plot(xdummy1, func(xdummy1, params[0], params[1]), linewidth = 2)
+
+# Original data
+params, params_covariance = curve_fit(func, xL50, yL50, p0=[75, 0.06], maxfev=10000)
+aList.append(params[0])
+bList.append(params[1])
+
+# CI calculation from http://kitchingroup.cheme.cmu.edu/blog/2013/02/12/Nonlinear-curve-fitting-with-parameter-confidence-intervals/
+alpha = 0.05 # 95% confidence interval
+n = len(yL50) # number of data points
+p = len(params) # number of parameters
+dof = max(0, n-p) # number of degrees of freedom
+tval = t.ppf(1.0-alpha/2., dof)
+paramNames = ['a','b']
+for i, p, var in zip(range(n), params, np.diag(params_covariance)):
+    sigma = var**0.5
+    print('CI for original fit', paramNames[i], ': {1} [{2}  {3}] {4}'.format(i, p, p - sigma*tval, p + sigma*tval, sigma*tval))
 
 
-plt.title("PMF Calculations for N=50, \u03C3=0.05 chains/$nm^2$", fontsize = 14)
+plt.scatter(xL50, yL50, s=70)
+plt.plot(xdummy2, func(xdummy2, params[0], params[1]), linewidth = 2)
+
+legendList = ("Stepwise", "Original")
+plt.legend(legendList)
+plt.title("PMF Calculations for N=50, \u03C3=0.5 chains/$nm^2$", fontsize = 14)
 plt.xscale('log')
 #plt.xlim(10E3, 10E5)
-plt.xlabel("Equilibration Time (timesteps)", fontsize = 14)
+plt.xlabel("Effective PullVel (A/fs)", fontsize = 14)
 plt.xticks(fontsize = 14)
 plt.ylabel("Peak $\psi$ (kcal/$m^3$)", fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
-"""
 
 
 """
@@ -402,7 +452,7 @@ plt.scatter(eq_timesteps_cycle_500keq, eq_yforce_cycle_500keq, s = 8)
 
 plt.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
-plt.title("y Force Calculations for N=50, \u03C3=0.05 chains/$nm^2$", fontsize = 14)
+plt.title("y Force Calculations for N=50, \u03C3=0.5 chains/$nm^2$", fontsize = 14)
 plt.xlabel("Timesteps", fontsize = 14)
 plt.xticks(fontsize = 14)
 plt.ylabel("y Force", fontsize = 14)
