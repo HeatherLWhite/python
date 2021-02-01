@@ -8,8 +8,6 @@ Due 2-2-2020
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-import decimal
-import decimal as d
 from random import seed
 from random import random
 
