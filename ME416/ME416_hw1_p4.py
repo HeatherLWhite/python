@@ -9,13 +9,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
-materialno = "2"
+materialno = "4"
 
 if materialno == "1":
     dr = 0.01
 elif materialno == "2":
     dr = 0.1
 elif materialno == "3":
+    dr = 0.01
+elif materialno == "4":
+    dr = 0.01
+elif materialno == "5":
     dr = 0.01
 
 distlist = []
